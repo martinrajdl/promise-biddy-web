@@ -14,17 +14,17 @@ export default function Header() {
   return (
     <header className="w-full py-6 px-6 md:px-8">
       <div className="max-w-4xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
-        {/* Logo / Home link with buddy icon */}
+        {/* Logo / Home link with header image */}
         <Link
           href="/"
-          className="flex items-center gap-2 text-lg font-medium text-text-primary hover:text-sage-dark transition-colors"
+          className="flex items-center gap-3 text-lg font-medium text-text-primary hover:text-sage-dark transition-colors"
         >
           <Image
-            src="/images_promise_buddy/red_panda.png"
+            src="/images_promise_buddy/header_image.png"
             alt=""
-            width={32}
-            height={32}
-            className="w-8 h-8"
+            width={40}
+            height={40}
+            className="w-10 h-10 rounded-lg"
             aria-hidden="true"
           />
           Promise Buddy
