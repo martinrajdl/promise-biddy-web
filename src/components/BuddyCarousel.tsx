@@ -6,10 +6,9 @@ import Image from "next/image";
 /*
  * Buddy Carousel Component
  *
- * A gentle, auto-rotating carousel showcasing all available buddies.
- * Uses CSS transitions for smooth sliding animation.
- * Pauses on hover for accessibility.
- * Larger images for better visibility.
+ * Wide carousel showing all 9 buddies at once.
+ * The highlighted buddy rotates through the list.
+ * Full width layout for maximum visibility.
  */
 
 const buddies = [
@@ -25,117 +24,77 @@ const buddies = [
 ];
 
 export default function BuddyCarousel() {
-  const [currentIndex, setCurrentIndex] = useState(0);
+  const [activeIndex, setActiveIndex] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
 
-  // Auto-rotate every 3 seconds
+  // Auto-rotate highlight every 2.5 seconds
   useEffect(() => {
     if (isPaused) return;
 
     const interval = setInterval(() => {
-      setCurrentIndex((prev) => (prev + 1) % buddies.length);
-    }, 3000);
+      setActiveIndex((prev) => (prev + 1) % buddies.length);
+    }, 2500);
 
     return () => clearInterval(interval);
   }, [isPaused]);
 
-  // Calculate which buddies to show (5 visible at a time on desktop)
-  const getVisibleBuddies = () => {
-    const visible = [];
-    for (let i = -2; i <= 2; i++) {
-      const index = (currentIndex + i + buddies.length) % buddies.length;
-      visible.push({ ...buddies[index], offset: i });
-    }
-    return visible;
-  };
-
-  const visibleBuddies = getVisibleBuddies();
-
   return (
     <div
-      className="w-full py-10 md:py-14 bg-blush overflow-hidden"
+      className="w-full py-12 md:py-16 bg-blush"
       onMouseEnter={() => setIsPaused(true)}
       onMouseLeave={() => setIsPaused(false)}
       role="region"
       aria-label="Meet your potential buddies"
     >
-      <div className="max-w-5xl mx-auto px-6">
-        <p className="text-center text-base text-text-secondary mb-6">
+      <div className="max-w-7xl mx-auto px-4">
+        <p className="text-center text-base md:text-lg text-text-secondary mb-8">
           Meet your potential buddies
         </p>
 
-        {/* Carousel container - larger height for bigger images */}
-        <div className="relative flex items-center justify-center h-40 md:h-48">
-          {visibleBuddies.map((buddy, idx) => {
-            // Calculate scale and opacity based on position
-            const isCenter = buddy.offset === 0;
-            const isAdjacent = Math.abs(buddy.offset) === 1;
-            const isEdge = Math.abs(buddy.offset) === 2;
-
-            let scale = "scale-100";
-            let opacity = "opacity-100";
-            let zIndex = "z-10";
-
-            if (isAdjacent) {
-              scale = "scale-75";
-              opacity = "opacity-60";
-              zIndex = "z-5";
-            } else if (isEdge) {
-              scale = "scale-50";
-              opacity = "opacity-30";
-              zIndex = "z-0";
-            }
-
-            // Position offset - wider spacing for larger images
-            const translateX = buddy.offset * 120;
+        {/* All buddies in a row */}
+        <div className="flex items-end justify-center gap-3 sm:gap-4 md:gap-6 lg:gap-8">
+          {buddies.map((buddy, idx) => {
+            const isActive = idx === activeIndex;
 
             return (
-              <div
-                key={`${buddy.name}-${idx}`}
-                className={`absolute transition-all duration-500 ease-in-out ${scale} ${opacity} ${zIndex}`}
-                style={{
-                  transform: `translateX(${translateX}px)`,
-                }}
+              <button
+                key={buddy.name}
+                onClick={() => setActiveIndex(idx)}
+                className={`flex flex-col items-center transition-all duration-300 ease-out ${
+                  isActive ? "scale-110" : "scale-100 opacity-70 hover:opacity-100"
+                }`}
               >
                 <div
-                  className={`rounded-2xl p-3 ${
-                    isCenter ? "bg-warm-white shadow-md" : ""
+                  className={`rounded-2xl p-2 md:p-3 transition-all duration-300 ${
+                    isActive
+                      ? "bg-warm-white shadow-lg ring-2 ring-sage/30"
+                      : "hover:bg-warm-white/50"
                   }`}
                 >
                   <Image
                     src={buddy.src}
-                    alt={isCenter ? buddy.name : ""}
-                    width={100}
-                    height={100}
-                    className="w-20 h-20 md:w-24 md:h-24"
-                    aria-hidden={!isCenter}
+                    alt={buddy.name}
+                    width={80}
+                    height={80}
+                    className={`transition-all duration-300 ${
+                      isActive
+                        ? "w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24"
+                        : "w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16"
+                    }`}
                   />
                 </div>
-                {isCenter && (
-                  <p className="text-sm text-text-primary font-medium text-center mt-2">
-                    {buddy.name}
-                  </p>
-                )}
-              </div>
+                <p
+                  className={`text-center mt-2 transition-all duration-300 ${
+                    isActive
+                      ? "text-sm md:text-base text-text-primary font-medium"
+                      : "text-xs md:text-sm text-text-muted"
+                  }`}
+                >
+                  {buddy.name}
+                </p>
+              </button>
             );
           })}
-        </div>
-
-        {/* Dots indicator - slightly larger */}
-        <div className="flex justify-center gap-2 mt-6">
-          {buddies.map((buddy, idx) => (
-            <button
-              key={buddy.name}
-              onClick={() => setCurrentIndex(idx)}
-              className={`w-2.5 h-2.5 rounded-full transition-colors ${
-                idx === currentIndex
-                  ? "bg-sage"
-                  : "bg-stone hover:bg-sand"
-              }`}
-              aria-label={`View ${buddy.name}`}
-              aria-current={idx === currentIndex ? "true" : undefined}
-            />
-          ))}
         </div>
       </div>
     </div>
