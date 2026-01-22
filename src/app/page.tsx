@@ -1,16 +1,18 @@
 import Link from "next/link";
 import Image from "next/image";
+import BuddyCarousel from "@/components/BuddyCarousel";
 
 /*
  * Landing Page
  *
  * Structure follows the brief:
- * 1. Hero - introduces the app with the main illustration
- * 2. How it works - 3 simple steps with buddy icons
- * 3. Supported goals - examples of promises
- * 4. Philosophy - the emotional core (no shame, honesty counts)
- * 5. Privacy & Safety - builds trust
- * 6. Final CTA - with secondary illustration showing all buddies
+ * 1. Hero - introduces the app with the header illustration
+ * 2. Buddy Carousel - showcase all available buddies
+ * 3. How it works - 3 simple steps with buddy icons
+ * 4. Supported goals - examples of promises
+ * 5. Philosophy - the emotional core (no shame, honesty counts)
+ * 6. Privacy & Safety - builds trust
+ * 7. Final CTA - with secondary illustration showing all buddies
  *
  * Design decisions:
  * - Generous whitespace throughout
@@ -23,6 +25,9 @@ export default function Home() {
     <div className="w-full">
       {/* Hero Section */}
       <HeroSection />
+
+      {/* Buddy Carousel */}
+      <BuddyCarousel />
 
       {/* How It Works */}
       <HowItWorksSection />
@@ -96,11 +101,11 @@ function HeroSection() {
           {/* Main illustration - right side on desktop */}
           <div className="flex-1 flex justify-center md:justify-end">
             <Image
-              src="/images_promise_buddy/main.png"
-              alt="A person sitting peacefully with their buddy companion"
-              width={450}
-              height={450}
-              className="w-full max-w-xs sm:max-w-sm md:max-w-md rounded-3xl"
+              src="/images_promise_buddy/header_image.png"
+              alt="A cozy room with a red panda buddy sitting peacefully"
+              width={500}
+              height={500}
+              className="w-full max-w-sm sm:max-w-md md:max-w-lg rounded-3xl shadow-lg"
               priority
             />
           </div>

@@ -9,6 +9,7 @@ import Image from "next/image";
  * A gentle, auto-rotating carousel showcasing all available buddies.
  * Uses CSS transitions for smooth sliding animation.
  * Pauses on hover for accessibility.
+ * Larger images for better visibility.
  */
 
 const buddies = [
@@ -52,19 +53,19 @@ export default function BuddyCarousel() {
 
   return (
     <div
-      className="w-full py-6 bg-blush overflow-hidden"
+      className="w-full py-10 md:py-14 bg-blush overflow-hidden"
       onMouseEnter={() => setIsPaused(true)}
       onMouseLeave={() => setIsPaused(false)}
       role="region"
       aria-label="Meet your potential buddies"
     >
-      <div className="max-w-4xl mx-auto px-6">
-        <p className="text-center text-sm text-text-muted mb-4">
+      <div className="max-w-5xl mx-auto px-6">
+        <p className="text-center text-base text-text-secondary mb-6">
           Meet your potential buddies
         </p>
 
-        {/* Carousel container */}
-        <div className="relative flex items-center justify-center h-24">
+        {/* Carousel container - larger height for bigger images */}
+        <div className="relative flex items-center justify-center h-40 md:h-48">
           {visibleBuddies.map((buddy, idx) => {
             // Calculate scale and opacity based on position
             const isCenter = buddy.offset === 0;
@@ -77,41 +78,41 @@ export default function BuddyCarousel() {
 
             if (isAdjacent) {
               scale = "scale-75";
-              opacity = "opacity-70";
+              opacity = "opacity-60";
               zIndex = "z-5";
             } else if (isEdge) {
               scale = "scale-50";
-              opacity = "opacity-40";
+              opacity = "opacity-30";
               zIndex = "z-0";
             }
 
-            // Position offset
-            const translateX = buddy.offset * 80;
+            // Position offset - wider spacing for larger images
+            const translateX = buddy.offset * 120;
 
             return (
               <div
                 key={`${buddy.name}-${idx}`}
                 className={`absolute transition-all duration-500 ease-in-out ${scale} ${opacity} ${zIndex}`}
                 style={{
-                  transform: `translateX(${translateX}px) ${isCenter ? "scale(1)" : ""}`,
+                  transform: `translateX(${translateX}px)`,
                 }}
               >
                 <div
-                  className={`rounded-2xl p-2 ${
-                    isCenter ? "bg-warm-white shadow-sm" : ""
+                  className={`rounded-2xl p-3 ${
+                    isCenter ? "bg-warm-white shadow-md" : ""
                   }`}
                 >
                   <Image
                     src={buddy.src}
                     alt={isCenter ? buddy.name : ""}
-                    width={64}
-                    height={64}
-                    className="w-16 h-16"
+                    width={100}
+                    height={100}
+                    className="w-20 h-20 md:w-24 md:h-24"
                     aria-hidden={!isCenter}
                   />
                 </div>
                 {isCenter && (
-                  <p className="text-xs text-text-secondary text-center mt-1">
+                  <p className="text-sm text-text-primary font-medium text-center mt-2">
                     {buddy.name}
                   </p>
                 )}
@@ -120,13 +121,13 @@ export default function BuddyCarousel() {
           })}
         </div>
 
-        {/* Dots indicator */}
-        <div className="flex justify-center gap-1.5 mt-4">
+        {/* Dots indicator - slightly larger */}
+        <div className="flex justify-center gap-2 mt-6">
           {buddies.map((buddy, idx) => (
             <button
               key={buddy.name}
               onClick={() => setCurrentIndex(idx)}
-              className={`w-2 h-2 rounded-full transition-colors ${
+              className={`w-2.5 h-2.5 rounded-full transition-colors ${
                 idx === currentIndex
                   ? "bg-sage"
                   : "bg-stone hover:bg-sand"
