@@ -2,12 +2,13 @@ import type { Metadata } from "next";
 import "./globals.css";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import BuddyCarousel from "@/components/BuddyCarousel";
 
 /*
  * Root Layout
  *
  * Uses system fonts for fast loading and native feel.
- * The layout is intentionally simple - just header, main content, footer.
+ * The layout is intentionally simple - just header, carousel, main content, footer.
  * No dark mode toggle since we want a consistent, calm experience.
  */
 
@@ -40,6 +41,7 @@ export default function RootLayout({
     <html lang="en">
       <body className="antialiased min-h-screen flex flex-col">
         <Header />
+        <BuddyCarousel />
         <main className="flex-1">{children}</main>
         <Footer />
       </body>
